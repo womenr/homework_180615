@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app id="WebApp_ID" version="2.5" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+  <display-name>Csvファイル管理</display-name>
+  <welcome-file-list>
+    <welcome-file>index.html</welcome-file>
+    <welcome-file>index.htm</welcome-file>
+    <welcome-file>index.jsp</welcome-file>
+    <welcome-file>default.html</welcome-file>
+    <welcome-file>default.htm</welcome-file>
+    <welcome-file>default.jsp</welcome-file>
+  </welcome-file-list>
+
+<!--springの設定ファイルの指定 -->
+  <context-param>
+  	<param-name>contextConfigLocation</param-name>
+  	<param-value>classpath*:applicationContext.xml</param-value>
+  </context-param>
+  <!-- リスナーの設定 -->
+  <listener>
+  	<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+  </listener>
+  
+
+  <!--springMVCの設定  -->
+  <servlet>
+  	<servlet-name>springmvc</servlet-name>
+  	<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+  	<!--設定ファイルの指定 -->
+  	<init-param>
+  		<param-name>contextConfigLocation</param-name>
+  		<param-value>classpath*:springmvc.xml</param-value>
+  	</init-param>
+  	<load-on-startup>1</load-on-startup>
+  </servlet>
+  
+ <servlet-mapping>
+  	<servlet-name>springmvc</servlet-name>
+  <!-- 	servlet配置方式有三种
+		1. *.action访问以.action结尾 由DispatcherServlet解析
+		2. /， 所有访问的地址都由DispatcherServlet解析，对于静态文件的解析需要配置不让DispatcherServlet解析。使用这种方式可以实现RESTful风格的url
+		3. /* ，这样配置不对，使用这种配置，最重要传发到一个jsp页面时，仍然会由DispatcherServlet解析jsp地址，不能根据jsp页面找到handler，会报错
+	 -->
+  	<url-pattern>/</url-pattern>
+  </servlet-mapping>
+  
+    <!--配置thymeleaf一定要加这个啊 不然404传不到给Controller !!! -->
+    <servlet-mapping>
+        <servlet-name>springmvc</servlet-name>
+        <url-pattern>*.html</url-pattern>
+    </servlet-mapping>
+  
+  <!-- 解决post方法乱码的过滤器 -->
+  <filter>
+  	<filter-name>CharacterEncodingFilter</filter-name>
+  	<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+	<init-param>
+		<param-name>encoding</param-name>
+		<param-value>utf-8</param-value>
+	</init-param>  
+  </filter>
+  
+  <filter-mapping>
+  	<filter-name>CharacterEncodingFilter</filter-name>
+  	<url-pattern>/*</url-pattern>
+  </filter-mapping>
+</web-app>
