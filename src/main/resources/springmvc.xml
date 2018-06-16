@@ -18,7 +18,7 @@
             http://www.springframework.org/schema/aop/spring-aop.xsd ">
 
 	<!-- コントローラーのスキャナー設定 -->
-	<context:component-scan base-package="wj.csv.controller"></context:component-scan>
+	<context:component-scan base-package="wj.**"></context:component-scan>
 
      <!-- 使用这个mvc注解驱动标签配置注解的处理器适配器和映射器 -->  <!--在这里引入校验器  -->
     <mvc:annotation-driven></mvc:annotation-driven>  
