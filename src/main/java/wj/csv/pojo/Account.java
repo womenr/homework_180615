@@ -3,7 +3,7 @@ package wj.csv.pojo;
 public class Account {
     private String account;
 
-    private Integer password;
+    private Integer aPassword;
 
     private Integer balance;
 
@@ -15,12 +15,12 @@ public class Account {
         this.account = account == null ? null : account.trim();
     }
 
-    public Integer getPassword() {
-        return password;
+    public Integer getaPassword() {
+        return aPassword;
     }
 
-    public void setPassword(Integer password) {
-        this.password = password;
+    public void setaPassword(Integer aPassword) {
+        this.aPassword = aPassword;
     }
 
     public Integer getBalance() {

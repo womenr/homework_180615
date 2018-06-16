@@ -174,63 +174,63 @@ public class AccountExample {
             return (Criteria) this;
         }
 
-        public Criteria andPasswordIsNull() {
-            addCriterion("password is null");
+        public Criteria andAPasswordIsNull() {
+            addCriterion("a_password is null");
             return (Criteria) this;
         }
 
-        public Criteria andPasswordIsNotNull() {
-            addCriterion("password is not null");
+        public Criteria andAPasswordIsNotNull() {
+            addCriterion("a_password is not null");
             return (Criteria) this;
         }
 
-        public Criteria andPasswordEqualTo(Integer value) {
-            addCriterion("password =", value, "password");
+        public Criteria andAPasswordEqualTo(Integer value) {
+            addCriterion("a_password =", value, "aPassword");
             return (Criteria) this;
         }
 
-        public Criteria andPasswordNotEqualTo(Integer value) {
-            addCriterion("password <>", value, "password");
+        public Criteria andAPasswordNotEqualTo(Integer value) {
+            addCriterion("a_password <>", value, "aPassword");
             return (Criteria) this;
         }
 
-        public Criteria andPasswordGreaterThan(Integer value) {
-            addCriterion("password >", value, "password");
+        public Criteria andAPasswordGreaterThan(Integer value) {
+            addCriterion("a_password >", value, "aPassword");
             return (Criteria) this;
         }
 
-        public Criteria andPasswordGreaterThanOrEqualTo(Integer value) {
-            addCriterion("password >=", value, "password");
+        public Criteria andAPasswordGreaterThanOrEqualTo(Integer value) {
+            addCriterion("a_password >=", value, "aPassword");
             return (Criteria) this;
         }
 
-        public Criteria andPasswordLessThan(Integer value) {
-            addCriterion("password <", value, "password");
+        public Criteria andAPasswordLessThan(Integer value) {
+            addCriterion("a_password <", value, "aPassword");
             return (Criteria) this;
         }
 
-        public Criteria andPasswordLessThanOrEqualTo(Integer value) {
-            addCriterion("password <=", value, "password");
+        public Criteria andAPasswordLessThanOrEqualTo(Integer value) {
+            addCriterion("a_password <=", value, "aPassword");
             return (Criteria) this;
         }
 
-        public Criteria andPasswordIn(List<Integer> values) {
-            addCriterion("password in", values, "password");
+        public Criteria andAPasswordIn(List<Integer> values) {
+            addCriterion("a_password in", values, "aPassword");
             return (Criteria) this;
         }
 
-        public Criteria andPasswordNotIn(List<Integer> values) {
-            addCriterion("password not in", values, "password");
+        public Criteria andAPasswordNotIn(List<Integer> values) {
+            addCriterion("a_password not in", values, "aPassword");
             return (Criteria) this;
         }
 
-        public Criteria andPasswordBetween(Integer value1, Integer value2) {
-            addCriterion("password between", value1, value2, "password");
+        public Criteria andAPasswordBetween(Integer value1, Integer value2) {
+            addCriterion("a_password between", value1, value2, "aPassword");
             return (Criteria) this;
         }
 
-        public Criteria andPasswordNotBetween(Integer value1, Integer value2) {
-            addCriterion("password not between", value1, value2, "password");
+        public Criteria andAPasswordNotBetween(Integer value1, Integer value2) {
+            addCriterion("a_password not between", value1, value2, "aPassword");
             return (Criteria) this;
         }
 
