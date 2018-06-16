@@ -21,12 +21,13 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.ModelAndView;
 
+import wj.base.controller.BaseController;
 import wj.csv.pojo.User;
 import wj.csv.service.CsvFileService;
 
 
 @Controller
-public class CsvFileController {
+public class CsvFileController extends BaseController{
 	
 	@Autowired
 	private CsvFileService service;
