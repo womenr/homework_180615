@@ -1,11 +1,13 @@
 package wj.csv.pojo;
 
+import java.math.BigDecimal;
+
 public class Account {
     private String account;
 
-    private Integer aPassword;
+    private Integer password;
 
-    private Integer balance;
+    private BigDecimal balance;
 
     public String getAccount() {
         return account;
@@ -15,19 +17,24 @@ public class Account {
         this.account = account == null ? null : account.trim();
     }
 
-    public Integer getaPassword() {
-        return aPassword;
+    public Integer getPassword() {
+        return password;
     }
 
-    public void setaPassword(Integer aPassword) {
-        this.aPassword = aPassword;
+    public void setPassword(Integer password) {
+        this.password = password;
     }
 
-    public Integer getBalance() {
+    public BigDecimal getBalance() {
         return balance;
     }
 
-    public void setBalance(Integer balance) {
+    public void setBalance(BigDecimal balance) {
         this.balance = balance;
     }
+
+	@Override
+	public String toString() {
+		return "Account [account=" + account + ", password=" + password + ", balance=" + balance + "]";
+	}
 }

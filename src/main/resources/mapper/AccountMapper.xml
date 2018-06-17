@@ -3,8 +3,8 @@
 <mapper namespace="wj.csv.mapper.AccountMapper">
   <resultMap id="BaseResultMap" type="wj.csv.pojo.Account">
     <result column="account" jdbcType="VARCHAR" property="account" />
-    <result column="a_password" jdbcType="INTEGER" property="aPassword" />
-    <result column="balance" jdbcType="INTEGER" property="balance" />
+    <result column="password" jdbcType="INTEGER" property="password" />
+    <result column="balance" jdbcType="DECIMAL" property="balance" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -65,7 +65,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    account, a_password, balance
+    account, password, balance
   </sql>
   <select id="selectByExample" parameterType="wj.csv.pojo.AccountExample" resultMap="BaseResultMap">
     select
@@ -88,9 +88,9 @@
     </if>
   </delete>
   <insert id="insert" parameterType="wj.csv.pojo.Account">
-    insert into t_account (account, a_password, balance
+    insert into t_account (account, password, balance
       )
-    values (#{account,jdbcType=VARCHAR}, #{aPassword,jdbcType=INTEGER}, #{balance,jdbcType=INTEGER}
+    values (#{account,jdbcType=VARCHAR}, #{password,jdbcType=INTEGER}, #{balance,jdbcType=DECIMAL}
       )
   </insert>
   <insert id="insertSelective" parameterType="wj.csv.pojo.Account">
@@ -99,8 +99,8 @@
       <if test="account != null">
         account,
       </if>
-      <if test="aPassword != null">
-        a_password,
+      <if test="password != null">
+        password,
       </if>
       <if test="balance != null">
         balance,
@@ -110,11 +110,11 @@
       <if test="account != null">
         #{account,jdbcType=VARCHAR},
       </if>
-      <if test="aPassword != null">
-        #{aPassword,jdbcType=INTEGER},
+      <if test="password != null">
+        #{password,jdbcType=INTEGER},
       </if>
       <if test="balance != null">
-        #{balance,jdbcType=INTEGER},
+        #{balance,jdbcType=DECIMAL},
       </if>
     </trim>
   </insert>
@@ -130,11 +130,11 @@
       <if test="record.account != null">
         account = #{record.account,jdbcType=VARCHAR},
       </if>
-      <if test="record.aPassword != null">
-        a_password = #{record.aPassword,jdbcType=INTEGER},
+      <if test="record.password != null">
+        password = #{record.password,jdbcType=INTEGER},
       </if>
       <if test="record.balance != null">
-        balance = #{record.balance,jdbcType=INTEGER},
+        balance = #{record.balance,jdbcType=DECIMAL},
       </if>
     </set>
     <if test="_parameter != null">
@@ -144,8 +144,8 @@
   <update id="updateByExample" parameterType="map">
     update t_account
     set account = #{record.account,jdbcType=VARCHAR},
-      a_password = #{record.aPassword,jdbcType=INTEGER},
-      balance = #{record.balance,jdbcType=INTEGER}
+      password = #{record.password,jdbcType=INTEGER},
+      balance = #{record.balance,jdbcType=DECIMAL}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>

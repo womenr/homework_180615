@@ -10,6 +10,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Type;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -20,6 +22,8 @@ import java.util.Set;
 import org.junit.Before;
 import org.junit.Test;
 
+import wj.csv.pojo.Account;
+import wj.csv.pojo.Items;
 import wj.csv.pojo.User;
 import wj.csv.utils.AutoFillBean;
 
@@ -29,42 +33,59 @@ public class AutoFillBeanTest {
 	public void setUp() throws Exception {
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Test
 	public <T> void testFillBean() {
-        Class<User> clazz = User.class;
+        //Class<User> clazz = User.class;
+		 Class<Account> clazz = Account.class;
+		// Class<Items> clazz = Items.class;
     	List<T> beanList = null;
     	T bean = null;
         
         try {
-            bean = (T) clazz.newInstance();
-            FileInputStream file = new FileInputStream(new File("C:\\Users\\Administrator\\Desktop\\User.csv")); 
+            FileInputStream file = new FileInputStream(new File("C:\\Users\\Administrator\\Desktop\\Account.csv")); 
             //获取指定的类中的所有属性
             Field[] fields = clazz.getDeclaredFields();
             //从文件中获取属性值的map
             Map<Integer, List<String>> fieldMap = AutoFillBean.readFile(file);
-            
+            beanList = new ArrayList<T>();
             Set<Integer> keySet = fieldMap.keySet(); //得到所有key的集合
             for (Integer lineNumber : keySet) { //遍历map，获取每一行的属性值的list
             	List<String> fieldList = fieldMap.get(lineNumber);
+            	//new一个bean
+            	bean = (T) clazz.newInstance();
             	for(int i = 0; i < fields.length; i++) {
-            	/*System.out.println(fields[i].getGenericType());
-            	}
-            }*/
+            		fields[i].setAccessible(true); 
                     String fieldName = fields[i].getName();
+                    //获取当前属性的类型
+                    Class type = (Class) fields[i].getGenericType();
+                    
                     //获取指定类中的相应属性的set方法，然后把获取到的值封装到对应的属性里面(指定属性名和属性类型)
                     Method method = clazz.getDeclaredMethod("set" 
                             + fieldName.substring(0, 1).toUpperCase()
-                            + fieldName.substring(1), fields[i].getGenericType().getClass());
-                    //从文件中获取对应属性的值，然后调用set方法把值存入类中
-                    String value = fieldList.get(i);
-                    method.invoke(bean, value);
+                            + fieldName.substring(1), type);
+                    
+                    //判断属性类型是Integer，还是string，还是BigDecimal,然后把从文件中获取的String类型数据进行相应的类型转换
+                    if (type.toString().endsWith("Integer")) {
+                    	Integer value = Integer.parseInt(fieldList.get(i));
+                        //调用set方法把值存入类中
+                        method.invoke(bean, value);
+                    } else if (type.toString().endsWith("String")) {
+                    	String value = fieldList.get(i);
+                        //调用set方法把值存入类中
+                        method.invoke(bean, value);
+                    } else if (type.toString().endsWith("BigDecimal")) {
+                    	BigDecimal value = BigDecimal.valueOf(Long.valueOf(fieldList.get(i)));
+                        //调用set方法把值存入类中
+                        method.invoke(bean, value);
+                    }
             	}
               //在bean的所有属性赋值完毕后，将这个bean加到beanList里面去，然后进行下一个bean的属性赋值
-                bean.toString();
                 beanList.add(bean);
-                for(T beanLists : beanList) {
-                	System.out.println(beanLists.getClass());
-                }
+            }
+            List<Account> accountList = (List<Account>) beanList;
+            for (Account account : accountList) {
+            	System.out.println(account);
             }
         } catch(Exception e) {
             e.printStackTrace();
@@ -92,17 +113,16 @@ public class AutoFillBeanTest {
 			String line = null;
 			//用map来装，并且为了保证存储的顺序不乱，选用linkedHashMap
 			fieldMap = new LinkedHashMap<Integer, List<String>>();
-			fieldList = new ArrayList<String>();
+			fieldList = null;
 		
 			//一行ずつデータを読み込んで、リストに格納する
 			while ((line = bReader.readLine()) != null) {
+				fieldList =  new ArrayList<String>();
 				if (line.trim() != "") {
 					String fields[] = line.trim().split(",");
 					for(int i = 0; i < fields.length; i++) {
 						fieldList.add(fields[i]);
-						System.out.print(fields[i]);
 					}
-					System.out.println(" ");
 					fieldMap.put(lineNumber++, fieldList);
 				}
 			}

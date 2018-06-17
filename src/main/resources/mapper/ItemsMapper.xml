@@ -3,7 +3,7 @@
 <mapper namespace="wj.csv.mapper.ItemsMapper">
   <resultMap id="BaseResultMap" type="wj.csv.pojo.Items">
     <result column="item" jdbcType="VARCHAR" property="item" />
-    <result column="price" jdbcType="INTEGER" property="price" />
+    <result column="price" jdbcType="DECIMAL" property="price" />
     <result column="info" jdbcType="VARCHAR" property="info" />
   </resultMap>
   <sql id="Example_Where_Clause">
@@ -90,7 +90,7 @@
   <insert id="insert" parameterType="wj.csv.pojo.Items">
     insert into t_items (item, price, info
       )
-    values (#{item,jdbcType=VARCHAR}, #{price,jdbcType=INTEGER}, #{info,jdbcType=VARCHAR}
+    values (#{item,jdbcType=VARCHAR}, #{price,jdbcType=DECIMAL}, #{info,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="wj.csv.pojo.Items">
@@ -111,7 +111,7 @@
         #{item,jdbcType=VARCHAR},
       </if>
       <if test="price != null">
-        #{price,jdbcType=INTEGER},
+        #{price,jdbcType=DECIMAL},
       </if>
       <if test="info != null">
         #{info,jdbcType=VARCHAR},
@@ -131,7 +131,7 @@
         item = #{record.item,jdbcType=VARCHAR},
       </if>
       <if test="record.price != null">
-        price = #{record.price,jdbcType=INTEGER},
+        price = #{record.price,jdbcType=DECIMAL},
       </if>
       <if test="record.info != null">
         info = #{record.info,jdbcType=VARCHAR},
@@ -144,7 +144,7 @@
   <update id="updateByExample" parameterType="map">
     update t_items
     set item = #{record.item,jdbcType=VARCHAR},
-      price = #{record.price,jdbcType=INTEGER},
+      price = #{record.price,jdbcType=DECIMAL},
       info = #{record.info,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />

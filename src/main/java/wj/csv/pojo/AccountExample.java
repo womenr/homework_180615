@@ -1,5 +1,6 @@
 package wj.csv.pojo;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -174,63 +175,63 @@ public class AccountExample {
             return (Criteria) this;
         }
 
-        public Criteria andAPasswordIsNull() {
-            addCriterion("a_password is null");
+        public Criteria andPasswordIsNull() {
+            addCriterion("password is null");
             return (Criteria) this;
         }
 
-        public Criteria andAPasswordIsNotNull() {
-            addCriterion("a_password is not null");
+        public Criteria andPasswordIsNotNull() {
+            addCriterion("password is not null");
             return (Criteria) this;
         }
 
-        public Criteria andAPasswordEqualTo(Integer value) {
-            addCriterion("a_password =", value, "aPassword");
+        public Criteria andPasswordEqualTo(Integer value) {
+            addCriterion("password =", value, "password");
             return (Criteria) this;
         }
 
-        public Criteria andAPasswordNotEqualTo(Integer value) {
-            addCriterion("a_password <>", value, "aPassword");
+        public Criteria andPasswordNotEqualTo(Integer value) {
+            addCriterion("password <>", value, "password");
             return (Criteria) this;
         }
 
-        public Criteria andAPasswordGreaterThan(Integer value) {
-            addCriterion("a_password >", value, "aPassword");
+        public Criteria andPasswordGreaterThan(Integer value) {
+            addCriterion("password >", value, "password");
             return (Criteria) this;
         }
 
-        public Criteria andAPasswordGreaterThanOrEqualTo(Integer value) {
-            addCriterion("a_password >=", value, "aPassword");
+        public Criteria andPasswordGreaterThanOrEqualTo(Integer value) {
+            addCriterion("password >=", value, "password");
             return (Criteria) this;
         }
 
-        public Criteria andAPasswordLessThan(Integer value) {
-            addCriterion("a_password <", value, "aPassword");
+        public Criteria andPasswordLessThan(Integer value) {
+            addCriterion("password <", value, "password");
             return (Criteria) this;
         }
 
-        public Criteria andAPasswordLessThanOrEqualTo(Integer value) {
-            addCriterion("a_password <=", value, "aPassword");
+        public Criteria andPasswordLessThanOrEqualTo(Integer value) {
+            addCriterion("password <=", value, "password");
             return (Criteria) this;
         }
 
-        public Criteria andAPasswordIn(List<Integer> values) {
-            addCriterion("a_password in", values, "aPassword");
+        public Criteria andPasswordIn(List<Integer> values) {
+            addCriterion("password in", values, "password");
             return (Criteria) this;
         }
 
-        public Criteria andAPasswordNotIn(List<Integer> values) {
-            addCriterion("a_password not in", values, "aPassword");
+        public Criteria andPasswordNotIn(List<Integer> values) {
+            addCriterion("password not in", values, "password");
             return (Criteria) this;
         }
 
-        public Criteria andAPasswordBetween(Integer value1, Integer value2) {
-            addCriterion("a_password between", value1, value2, "aPassword");
+        public Criteria andPasswordBetween(Integer value1, Integer value2) {
+            addCriterion("password between", value1, value2, "password");
             return (Criteria) this;
         }
 
-        public Criteria andAPasswordNotBetween(Integer value1, Integer value2) {
-            addCriterion("a_password not between", value1, value2, "aPassword");
+        public Criteria andPasswordNotBetween(Integer value1, Integer value2) {
+            addCriterion("password not between", value1, value2, "password");
             return (Criteria) this;
         }
 
@@ -244,52 +245,52 @@ public class AccountExample {
             return (Criteria) this;
         }
 
-        public Criteria andBalanceEqualTo(Integer value) {
+        public Criteria andBalanceEqualTo(BigDecimal value) {
             addCriterion("balance =", value, "balance");
             return (Criteria) this;
         }
 
-        public Criteria andBalanceNotEqualTo(Integer value) {
+        public Criteria andBalanceNotEqualTo(BigDecimal value) {
             addCriterion("balance <>", value, "balance");
             return (Criteria) this;
         }
 
-        public Criteria andBalanceGreaterThan(Integer value) {
+        public Criteria andBalanceGreaterThan(BigDecimal value) {
             addCriterion("balance >", value, "balance");
             return (Criteria) this;
         }
 
-        public Criteria andBalanceGreaterThanOrEqualTo(Integer value) {
+        public Criteria andBalanceGreaterThanOrEqualTo(BigDecimal value) {
             addCriterion("balance >=", value, "balance");
             return (Criteria) this;
         }
 
-        public Criteria andBalanceLessThan(Integer value) {
+        public Criteria andBalanceLessThan(BigDecimal value) {
             addCriterion("balance <", value, "balance");
             return (Criteria) this;
         }
 
-        public Criteria andBalanceLessThanOrEqualTo(Integer value) {
+        public Criteria andBalanceLessThanOrEqualTo(BigDecimal value) {
             addCriterion("balance <=", value, "balance");
             return (Criteria) this;
         }
 
-        public Criteria andBalanceIn(List<Integer> values) {
+        public Criteria andBalanceIn(List<BigDecimal> values) {
             addCriterion("balance in", values, "balance");
             return (Criteria) this;
         }
 
-        public Criteria andBalanceNotIn(List<Integer> values) {
+        public Criteria andBalanceNotIn(List<BigDecimal> values) {
             addCriterion("balance not in", values, "balance");
             return (Criteria) this;
         }
 
-        public Criteria andBalanceBetween(Integer value1, Integer value2) {
+        public Criteria andBalanceBetween(BigDecimal value1, BigDecimal value2) {
             addCriterion("balance between", value1, value2, "balance");
             return (Criteria) this;
         }
 
-        public Criteria andBalanceNotBetween(Integer value1, Integer value2) {
+        public Criteria andBalanceNotBetween(BigDecimal value1, BigDecimal value2) {
             addCriterion("balance not between", value1, value2, "balance");
             return (Criteria) this;
         }

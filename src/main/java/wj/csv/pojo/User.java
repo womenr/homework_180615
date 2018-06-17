@@ -7,7 +7,7 @@ public class User {
 
     private String password;
 
-    private String address;
+    private String email;
 
     public Integer getUid() {
         return uid;
@@ -33,11 +33,16 @@ public class User {
         this.password = password == null ? null : password.trim();
     }
 
-    public String getAddress() {
-        return address;
+    public String getEmail() {
+        return email;
     }
 
-    public void setAddress(String address) {
-        this.address = address == null ? null : address.trim();
+    public void setEmail(String email) {
+        this.email = email == null ? null : email.trim();
     }
+
+	@Override
+	public String toString() {
+		return "User [uid=" + uid + ", username=" + username + ", password=" + password + ", email=" + email + "]";
+	}
 }

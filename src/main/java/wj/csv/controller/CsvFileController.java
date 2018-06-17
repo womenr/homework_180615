@@ -15,6 +15,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import wj.base.controller.BaseController;
+import wj.csv.pojo.Account;
+import wj.csv.pojo.Items;
+import wj.csv.pojo.User;
 import wj.csv.service.CsvFileService;
 
 
@@ -28,11 +31,6 @@ public class CsvFileController extends BaseController{
 	public String home() {
 		return "files/upload";
 	}
-	
-/*    @RequestMapping(value="upload", method=RequestMethod.GET)  
-    public String showUploadPage(){   
-        return "uploadFile";         //view文件夹下的上传单个文件的页面  
-    }  */
 	
 	@ResponseBody
 	@RequestMapping(value="/upload",method=RequestMethod.POST) 
@@ -49,16 +47,15 @@ public class CsvFileController extends BaseController{
         	return "files/upload"; 
 		}
 		//将上传上来的文件直接转化成流
-		
 		InputStream fileInput = file.getInputStream();
 		
-		
-		
-		
-		
-		
-		return "success";
-		
-		
+		Class<?> clazz = service.checkFileName(fileName);
+		if (clazz != null) {
+			service.insertData(fileInput, clazz);
+			return "success";
+		} else {
+			model.addAttribute("fileError", "上传文件名不符合要求，无法将数据自动填充到数据库");
+        	return "files/upload"; 
+		}
 	}
 }
