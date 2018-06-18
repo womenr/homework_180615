@@ -1,18 +1,19 @@
 <!DOCTYPE html>  
 <html xmlns:th="http://www.thymeleaf.org"  
 xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"  
-layout:decorator="layout/default">  
+layout:decorator="layout/default" style="margin-left: 15px;">  
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 <title>Csv文件管理</title> 
-<!-- Bootstrap -->
-<link href="../../static/bootstrap-3.3.7-dist/css/bootstrap-theme.min.css" rel="stylesheet">
- <!-- jQuery (Bootstrap 的所有 JavaScript 插件都依赖 jQuery，所以必须放在前边) -->
-  <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-    <!-- 加载 Bootstrap 的所有 JavaScript 插件。你也可以根据需要只加载单个插件。 -->
-   <script src="../../static/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+   
+<!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+<link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<!--引入必须的jquery文件  -->
+ <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+<script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
    <script type="text/javascript">
 
-		function checkSubmitWithClass(){
+		function checkSubmit(){
 			var t_textNode = document.getElementById("t_text");
 			var c_textNode = document.getElementById("c_text");
 			var fileNode = document.getElementById("file");
@@ -20,51 +21,186 @@ layout:decorator="layout/default">
 				alert("没有指定上传文件");
 				return false;
 			}
-			if (t_textNode.value == "" || t_textNode == null){
-				alert("没有指定文件在数据库中生成的表名");
-				return false;
-			}
-			if (c_textNode.value == "" || c_textNode == null){
-				alert("没有指定文件数据封装的类名");
-				return false;
-			}
 			return true;
 		}
+		
+/* 		function edit(btu){
+			var primaryKey = btu.value;
+	        $.ajax({
+	            url:"@{/upload}",
+	            type:"post",
+	            data:{"primaryKey": primaryKey},    
+	            dataType:"json",
+	            success:function (data) {
+	                alert(data);
+	            }
+	        })
+		}
+
+		function deleteItem(btu){
+			var primaryKey = btu.value;
+	        $.ajax({
+	            url:"@{/deleteItem}",
+	            type:"post",
+	            data:{"primaryKey": primaryKey},    
+	            dataType:"json",
+	            success:function (data) {
+	                alert(data);
+	            }
+	        })
+		}
+		
+		function download(btu){
+			var tableValue = btu.value;
+			 $.ajax({
+		            url:"@{/downloadTable}",
+		            type:"post",
+		            data:{"tableValue": tableValue},    
+		            dataType:"json",
+		            success:function (data) {
+		                alert(data);
+		            }
+		    })
+		}
+		
+		function deleteTable(btu){
+			var tableValue = btu.value;
+			 $.ajax({
+		            url:"@{/deleteTable}",
+		            type:"post",
+		            data:{"tableValue": tableValue},    
+		            dataType:"json",
+		            success:function (data) {
+		                alert(data);
+		            }
+		    })
+		} */
+		
    </script>
 </head> 
  
-<body>  
-	<div class="row" layout:fragment="content">  
-		<h2 class="indigo-text center">文件上传</h2>  
-		<form th:action="@{/upload}" method="post" enctype="multipart/form-data" class="col m8 s12 offset-m2">  
-		
-			<div class="input-field col s6">  
-				<input type="file" id="file" name="file"/>  
+<body style="width:80%">
+<!--使用thymeleaf和bootstrap的时候一定要注意在pom里面引入jar包，不然无效  -->  
+	<div layout:fragment="content">  
+		<h1>CSV文件数据管理系统</h1>  
+			<blockquote>
+				<p class="text-left">
+					文件上传说明：<br>
+					<small>1.必须是csv类型文件。2.文件编码最好是UTF-8，否则会出现中文乱码现象。
+					3.可存入数据库中的表只有三个，上传文件内容必须和数据库中的数据类型、格式一致，详情参照数据示例。<br></small>
+					<small>4.每张表的第一列数据为各表的主键，如果上传文件中的表格数据存在与数据库已存表的主键值相同的情况将覆盖数据库中的原值</small></p>
+			</blockquote>
+		<form class="form-group" th:action="@{/upload}" method="post" enctype="multipart/form-data">  
+			<div>  
+				<label for="file">File input</label>
+				<input type="file" id="file" name="file"/>
+				<p class="help-block">指定需要上传的CSV文件，注意文件格式和文件编码</p>  
 			</div>  
-			<div>
-			</div>
-			<div class="col s6 center">  
-				<button class="btn indigo waves-effect waves-light" type="submit" name="save" th:text="#{submit}" onclick="return checkSubmitWithClass()">
-					生成相应表格<i class="mdi-content-send right"></i>  
-				</button>  
+			<div>  
+				<button class="btn btn-primary" type="submit" name="save" onclick="return checkSubmit()">
+					生成相应表格</button>  
 			</div>  
 		</form>  
 	</div>  
 	
-	<div>
-		<table>
-			<tr>
-				<th width="200px">表名</th>
-			</tr>
-			
-			<tr>
-				<td>something</td>
-			</tr>
-		</table>
-	</div>
-	<div>
-		<button value="编辑" onclick="">编辑</button>
-		<button value="删除" onclick="">删除</button>
+	<div id="div_tables">
+		<div>
+			<table id="table_user" class="table table-bordered table-hover">
+				<tr>
+					<th class="text-center" colspan="5">用户数据表</th>
+				</tr>
+				<tr>
+					<th class="text-center">uid</th>
+					<th class="text-center">username</th>
+				    <th class="text-center">password</th>	
+					<th class="text-center">email</th>
+					<th class="text-center" >操作</th>
+				</tr>
+				<tr th:each = "user : ${userList}">
+					<td th:text="${user.uid}"></td>
+					<td th:text="${user.username}"></td>
+					<td th:text="${user.password}"></td>
+					<td th:text="${user.email}"></td>
+					<td style="width:110px">
+						<button value="edit(${user.uid})" onclick="edit(this)">编辑</button>
+						<button value="delete(${user.uid})" onclick="deleteItem(this)">删除</button>
+					</td>
+				</tr>
+				<tr>
+					<th class="text-center" colspan="5">
+						<div>
+							<span>整表操作:</span>
+							<button value="download_u" onclick="download(this)">下载</button>
+							<button value="deleteTable_u" onclick="delete(this)">删除</button>
+						</div>
+					</th>
+				</tr>
+			</table>
+		</div>
+		
+		<div>
+			<table id="table_account" class="table table-bordered table-hover"  style="width:80%">
+				<tr>
+					<th class="text-center" colspan="4">账户数据表</th>
+				</tr>
+				<tr>
+					<th class="text-center">account</th>
+					<th class="text-center">password</th>
+				    <th class="text-center">balance</th>	
+				    <th class="text-center">操作</th>
+				</tr>
+				<tr th:each = "account : ${accountList}">
+					<td th:text="${account.account}"></td>
+					<td th:text="${account.password}"></td>
+					<td th:text="${account.balance}"></td>
+					<td style="width:110px">
+						<button value="edit(${account.account})" onclick="edit(this)">编辑</button>
+						<button value="delete(${account.account})" onclick="deleteItem(this)">删除</button>
+					</td>
+				<tr>
+					<th class="text-center" colspan="4">
+						<div>
+							<span>整表操作:</span>
+							<button value="download_a" onclick="download(this)">下载</button>
+							<button value="deleteTable_a" onclick="deleteTable(this)">删除</button>
+						</div>
+					</th>
+				</tr>
+			</table>
+		</div>
+		
+		<div>
+			<table id="table_items" class="table table-bordered table-hover" style="width:80%">
+				<tr>
+					<th class="text-center" colspan="4">商品数据表</th>
+				</tr>
+				<tr>
+					<th class="text-center">item</th>
+					<th class="text-center">price</th>
+				    <th class="text-center">info</th>
+				    <th class="text-center" >操作</th>	
+				</tr>
+				<tr th:each = "items : ${itemsList}">
+					<td th:text="${items.item}"></td>
+					<td th:text="${items.price}"></td>
+					<td th:text="${items.info}"></td>
+					<td style="width:110px">
+						<button value="edit(${items.item})" onclick="edit(this)">编辑</button>
+						<button value="delete(${items.item})" onclick="deleteItem(this)">删除</button>
+					</td>
+				</tr>
+				<tr>
+					<th class="text-center" colspan="4">
+						<div>
+							<span>整表操作:</span>
+							<button value="download_i" onclick="download(this)">下载</button>
+							<button value="deleteTable_i" onclick="deleteTable(this)">删除</button>
+						</div>
+					</th>
+				</tr>
+			</table>
+		</div>
+		
 	</div>
 </body>  
 

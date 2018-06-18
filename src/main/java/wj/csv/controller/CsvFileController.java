@@ -1,6 +1,7 @@
 package wj.csv.controller;
 
 import java.io.InputStream;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import wj.base.controller.BaseController;
 import wj.csv.pojo.Account;
 import wj.csv.pojo.Items;
+import wj.csv.pojo.Msg;
 import wj.csv.pojo.User;
 import wj.csv.service.CsvFileService;
 
@@ -25,10 +27,47 @@ import wj.csv.service.CsvFileService;
 public class CsvFileController extends BaseController{
 	
 	@Autowired
-	private CsvFileService service;
+	private CsvFileService csvFileService;
+	
+	@RequestMapping("/editItem")
+	@ResponseBody
+	public String eidtItem(String pk){
+	        return null;
+	}
+	
+	@RequestMapping("/deleteItem")
+	@ResponseBody
+	public String deleteItem(String pk){
+	        return null;
+	}
+	
+	@RequestMapping("/downloadTable")
+	@ResponseBody
+	public String downloadTable(String tableName){
+		return null;
+	}
+	
+	@RequestMapping("/deleteTable")
+	@ResponseBody
+	public String deleteTable(String tableName, Model model){
+	    System.out.println(tableName);
+	    if(tableName != null) {
+	    	csvFileService.deleteTable(tableName);
+	    	model.addAttribute("msg", "成功清空表格数据");
+	        return "files/upload";
+	    }
+	    	model.addAttribute("msg", "清空表格数据失败");
+	        return "files/upload";
+	}
 	
 	@RequestMapping("/home")
-	public String home() {
+	public String home(Model model) {
+		List<User> userList = csvFileService.findAll(User.class);
+		List<Items> itemsList = csvFileService.findAll(Items.class);
+		List<Account> accountList = csvFileService.findAll(Account.class);
+		model.addAttribute("userList", userList);
+		model.addAttribute("itemsList", itemsList);
+		model.addAttribute("accountList", accountList);
 		return "files/upload";
 	}
 	
@@ -49,9 +88,10 @@ public class CsvFileController extends BaseController{
 		//将上传上来的文件直接转化成流
 		InputStream fileInput = file.getInputStream();
 		
-		Class<?> clazz = service.checkFileName(fileName);
+		//调用service方法，从文件名判断应该存放到哪个数据库的表然后进行数据存放
+		Class<?> clazz = csvFileService.checkFileName(fileName);
 		if (clazz != null) {
-			service.insertData(fileInput, clazz);
+			csvFileService.insertData(fileInput, clazz);
 			return "success";
 		} else {
 			model.addAttribute("fileError", "上传文件名不符合要求，无法将数据自动填充到数据库");

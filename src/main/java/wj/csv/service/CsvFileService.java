@@ -27,7 +27,7 @@ public class CsvFileService {
 	@Autowired
 	private ItemsMapper itemsMapper;
 	
-	public Class checkFileName(String fileName) {
+	public Class<?> checkFileName(String fileName) {
 		if (fileName.startsWith("User")) {
 			Class<User> clazz = User.class;
 			return clazz;
@@ -42,6 +42,7 @@ public class CsvFileService {
 		}
 	}
 	
+	@SuppressWarnings("unchecked")
 	public <T> void insertData(InputStream file, Class<T> clazz) {
 		List<T> beanList = AutoFillBean.fillBean(file, clazz);
 		//判断获得的beanList是属于哪个类的，然后用相应的mapper进行数据插入操作
@@ -67,9 +68,84 @@ public class CsvFileService {
 		}
 	}
 
-//	public String writeCsv(String tableName, String className) {
-//		
-//		//userMapper.writeData();
-//		return null;
-//	}
+	public List<Boolean> checkDuplication(){//这个方法用来分析文件里面的数据是否在数据库中有相同项目，如果有，则不插入，
+		
+		List<Boolean> checkList = new ArrayList<Boolean>();
+		return checkList;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public <T> List<T> findAll(Class<T> clazz){ //适用于所有表格的查询所有数据的功能，返回beanList
+		List<T> beanList = new ArrayList<T>();
+		if (clazz == User.class) {
+			beanList = (List<T>) userMapper.selectByExample(null);
+		} else if (clazz == Account.class) {
+			beanList = (List<T>) accountMapper.selectByExample(null);
+		} else if (clazz == Items.class) {
+			beanList = (List<T>) itemsMapper.selectByExample(null);
+		} else {
+			return null;
+		}
+		return beanList;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public <T> T findByPrimaryKey(Class<T> clazz, String primaryKey) {
+		T bean = null;
+		if (clazz == User.class) {
+			Integer uid = Integer.parseInt(primaryKey);
+			bean = (T) userMapper.findByPrimaryKey(uid);
+		} else if (clazz == Account.class) {
+			bean = (T) accountMapper.findByPrimaryKey(primaryKey);
+		} else if (clazz == Items.class) {
+			bean = (T) itemsMapper.findByPrimaryKey(primaryKey);
+		} else {
+			return null;
+		}
+		return bean;
+	}
+
+
+	public void deleteTable(String tableName) {
+		if(tableName.endsWith("u")) {//说明这个要删的表是user表
+			//获得所有user表里面的user对象
+			List<User> userList = userMapper.selectByExample(null);
+			//获取每个user的主键，然后调用mapper的方法将其在数据库中删掉
+			for (User user: userList) {
+				Integer pk = user.getUid();
+				userMapper.deleteByPrimaryKey(pk);
+			}
+		}
+		if(tableName.endsWith("i")) {//说明这个要删的表是items表
+			//获得所有items表里面的item对象
+			List<Items> itemsList = itemsMapper.selectByExample(null);
+			//获取每个items的主键，然后调用mapper的方法将其在数据库中删掉
+			for (Items item: itemsList) {
+				String pk = item.getItem();
+				itemsMapper.deleteByPrimaryKey(pk);
+			}
+		}
+		if(tableName.endsWith("a")) {//说明这个要删的表是account表
+			//获得所有account表里面的account对象
+			List<Account> accountList = accountMapper.selectByExample(null);
+			//获取每个account的主键，然后调用mapper的方法将其在数据库中删掉
+			for (Account account: accountList) {
+				String pk = account.getAccount();
+				accountMapper.deleteByPrimaryKey(pk);
+			}
+		}
+	}
+
+	public void downloadTable() {
+		
+	}
+
+	public void editItemByPrimaryKey() {
+		
+	}
+
+	public void deleteItemByPrimaryKey(String pk) {
+		
+	}
+	
 }
