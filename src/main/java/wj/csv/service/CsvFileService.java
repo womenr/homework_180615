@@ -1,9 +1,12 @@
 package wj.csv.service;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
+import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,44 +30,44 @@ public class CsvFileService {
 	@Autowired
 	private ItemsMapper itemsMapper;
 	
-	public Class<?> checkFileName(String fileName) {
-		if (fileName.startsWith("User")) {
-			Class<User> clazz = User.class;
-			return clazz;
-		} else if (fileName.startsWith("Items")) {
-			Class<Items> clazz = Items.class;
-			return clazz;
-		} else if (fileName.startsWith("Account")) {
-			Class<Account> clazz = Account.class;
-			return clazz;
-		} else {
-			return null;
-		}
-	}
-	
 	@SuppressWarnings("unchecked")
-	public <T> void insertData(InputStream file, Class<T> clazz) {
-		List<T> beanList = AutoFillBean.fillBean(file, clazz);
+	public <T> void insertData(InputStream file, String fileName) throws ClassNotFoundException {
+		String pojoPath = AutoFillBean.getClassPath();
+		List<T> beanList = AutoFillBean.fillBean(file, fileName, pojoPath);
 		//判断获得的beanList是属于哪个类的，然后用相应的mapper进行数据插入操作
-		if (clazz.getName().endsWith("User")) {
-			List<User> userList = (List<User>) beanList;
-			for (User user : userList) {
-				userMapper.insert(user);
+		Class<?> clazz;
+		try {
+			clazz = AutoFillBean.getClassFromFileName(fileName, pojoPath);
+/**
+ * 这里调用相应的mapper之前用的是if判断，然后将bean强转为对应的class类再用mapper的方法把数据传进去，这里要怎么优化？
+ */
+			
+			if (clazz.getName().endsWith("User")) {
+				List<User> userList =  (List<User>) beanList;
+				for (User user : userList) {
+					userMapper.insert(user);
+				}
 			}
-		}
-		
-		if (clazz.getName().endsWith("Account")) {
-			List<Account> accountList = (List<Account>) beanList;
-			for (Account account : accountList) {
-				accountMapper.insert(account);
+			
+			if (clazz.getName().endsWith("Account")) {
+				List<Account> accountList = (List<Account>) beanList;
+				for (Account account : accountList) {
+					accountMapper.insert(account);
+				}
 			}
-		}
-		
-		if (clazz.getName().endsWith("Items")) {
-			List<Items> itemsList = (List<Items>) beanList;
-			for (Items items : itemsList) {
-				itemsMapper.insert(items);
+			
+			if (clazz.getName().endsWith("Items")) {
+				List<Items> itemsList = (List<Items>) beanList;
+				for (Items items : itemsList) {
+					itemsMapper.insert(items);
+				}
 			}
+		} catch (ClassNotFoundException e) {
+			throw e;
+		} catch (InstantiationException e) {
+			throw new RuntimeException(e);
+		} catch (IllegalAccessException e) {
+			throw new RuntimeException(e);
 		}
 	}
 
@@ -147,5 +150,7 @@ public class CsvFileService {
 	public void deleteItemByPrimaryKey(String pk) {
 		
 	}
+
+
 	
 }

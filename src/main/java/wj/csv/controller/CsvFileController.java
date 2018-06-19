@@ -1,5 +1,6 @@
 package wj.csv.controller;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
@@ -53,10 +54,10 @@ public class CsvFileController extends BaseController{
 	    System.out.println(tableName);
 	    if(tableName != null) {
 	    	csvFileService.deleteTable(tableName);
-	    	model.addAttribute("msg", "成功清空表格数据");
+	    	model.addAttribute("tabelMsg", "成功清空表格数据");
 	        return "files/upload";
 	    }
-	    	model.addAttribute("msg", "清空表格数据失败");
+	    	model.addAttribute("tabelMsg", "清空表格数据失败");
 	        return "files/upload";
 	}
 	
@@ -73,29 +74,34 @@ public class CsvFileController extends BaseController{
 	
 	@ResponseBody
 	@RequestMapping(value="/upload",method=RequestMethod.POST) 
-    public String upload(@RequestParam(value = "file", required = false) MultipartFile file, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception{
+    public String upload(@RequestParam(value = "file", required = false) MultipartFile file, HttpServletRequest request, HttpServletResponse response, Model model) {
 
 		if(file.isEmpty()) {
-        	model.addAttribute("fileError", "上传文件内容为空");
+        	model.addAttribute("fileMsg", "上传文件内容为空");
         	return "files/upload"; 
         }
         //判断文件是否是csv文件
 		String fileName = file.getOriginalFilename();
 		if (!(fileName.endsWith(".csv"))) {
-			model.addAttribute("fileError", "所上传的文件必须是csv文件");
+			model.addAttribute("fileMsg", "所上传的文件必须是csv文件");
         	return "files/upload"; 
 		}
 		//将上传上来的文件直接转化成流
-		InputStream fileInput = file.getInputStream();
-		
-		//调用service方法，从文件名判断应该存放到哪个数据库的表然后进行数据存放
-		Class<?> clazz = csvFileService.checkFileName(fileName);
-		if (clazz != null) {
-			csvFileService.insertData(fileInput, clazz);
-			return "success";
-		} else {
-			model.addAttribute("fileError", "上传文件名不符合要求，无法将数据自动填充到数据库");
+		InputStream fileInput;
+		try {
+			fileInput = file.getInputStream();
+			//调用service方法，从文件名判断应该存放到哪个数据库的表然后进行数据存放
+			csvFileService.insertData(fileInput, fileName);
+		} catch (IOException e) {
+			model.addAttribute("fileMsg", "文件上传失败");
+        	return "files/upload"; 
+		} catch (ClassNotFoundException e) {
+			model.addAttribute("fileMsg", "文件名不符合规定");
         	return "files/upload"; 
 		}
+		//如果上述步骤都通过了，那就说明文件上传成功，并且数据也保存到了数据库，则跳转到成功页面。
+		model.addAttribute("fileMsg", "文件名不符合规定");
+    	return "files/upload";
+
 	}
 }
