@@ -1,8 +1,11 @@
 package wj.csv.pojo;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
-public class Account {
+@SuppressWarnings("serial")
+public class Account implements Serializable{ //为了在页面可以通过session来提取该对象的数据信息，必须使用序列化的对象
+	
     private String account;
 
     private Integer password;

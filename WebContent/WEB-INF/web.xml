@@ -20,7 +20,26 @@
   	<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
   </listener>
   
-
+    <!-- 指定监听器加载的log4j配置文件 -->
+      <context-param>  
+          <param-name>log4jConfigLocation</param-name>  
+          <param-value>classpath:log4j.properties</param-value>  
+      </context-param>  
+         
+      <listener>  
+          <listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>  
+     </listener>
+  
+	<!-- css和js文件的解析 -->
+	<servlet-mapping>
+    	<servlet-name>default</servlet-name>         
+		<url-pattern>*.js</url-pattern>      
+	</servlet-mapping>
+	<servlet-mapping>
+	     <servlet-name>default</servlet-name>             
+		 <url-pattern>*.css</url-pattern>        
+	</servlet-mapping>
+	
   <!--springMVCの設定  -->
   <servlet>
   	<servlet-name>springmvc</servlet-name>

@@ -1,6 +1,10 @@
 package wj.csv.pojo;
 
-public class User {
+import java.io.Serializable;
+
+@SuppressWarnings("serial")
+public class User implements Serializable{ //为了在页面可以通过session来提取该对象的数据信息，必须使用序列化的对象
+	
     private Integer uid;
 
     private String username;

@@ -150,19 +150,19 @@
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <select id="findByPrimaryKey" parameterType="java.lang.String" resultType="wj.csv.pojo.Account">
+  <select id="findByPrimaryKey" resultType="wj.csv.pojo.Account">
   	SELECT 
-	<if test="distinct">
-      distinct
-    </if>
     <include refid="Base_Column_List" />
- 	FROM t_account WHERE account=${account}
+ 	FROM t_account WHERE account= #{primaryKey}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+  <delete id="deleteByPrimaryKey">
     DELETE 
     FROM 
     t_account
     WHERE
-    account=${account}
+    account= #{primaryKey}
   </delete>
+  <select id="showTables" resultType="wj.csv.pojo.TableList">
+  	SELECT table_name FROM information_schema.tables WHERE table_schema='database2' AND table_type='base table';
+  </select>
 </mapper>

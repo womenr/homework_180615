@@ -15,6 +15,7 @@ import wj.csv.mapper.ItemsMapper;
 import wj.csv.mapper.UserMapper;
 import wj.csv.pojo.Account;
 import wj.csv.pojo.Items;
+import wj.csv.pojo.TableList;
 import wj.csv.pojo.User;
 import wj.csv.utils.AutoFillBean;
 
@@ -30,36 +31,46 @@ public class CsvFileService {
 	@Autowired
 	private ItemsMapper itemsMapper;
 	
-	@SuppressWarnings("unchecked")
 	public <T> void insertData(InputStream file, String fileName) throws ClassNotFoundException {
-		String pojoPath = AutoFillBean.getClassPath();
-		List<T> beanList = AutoFillBean.fillBean(file, fileName, pojoPath);
+		List<T> beanList = AutoFillBean.fillBean(file, fileName);
 		//判断获得的beanList是属于哪个类的，然后用相应的mapper进行数据插入操作
 		Class<?> clazz;
 		try {
-			clazz = AutoFillBean.getClassFromFileName(fileName, pojoPath);
+			clazz = AutoFillBean.getClassFromFileName(fileName);
 /**
  * 这里调用相应的mapper之前用的是if判断，然后将bean强转为对应的class类再用mapper的方法把数据传进去，这里要怎么优化？
  */
-			
 			if (clazz.getName().endsWith("User")) {
-				List<User> userList =  (List<User>) beanList;
-				for (User user : userList) {
+				for (T bean : beanList) {
+					User user = (User) bean;
+					Integer uid = user.getUid();
+					if (userMapper.findByPrimaryKey(uid) != null) { //如果数据库中已经有这个数据，就删掉，再插入
+						userMapper.deleteByPrimaryKey(uid);
+					}
 					userMapper.insert(user);
 				}
 			}
 			
 			if (clazz.getName().endsWith("Account")) {
-				List<Account> accountList = (List<Account>) beanList;
-				for (Account account : accountList) {
+				for (T bean : beanList) {
+					Account account = (Account) bean;
+					String primaryKey = account.getAccount();
+					if (accountMapper.findByPrimaryKey(primaryKey) != null) { //如果数据库中已经有这个数据，就删掉，再插入
+						accountMapper.deleteByPrimaryKey(primaryKey);
+					}
 					accountMapper.insert(account);
 				}
 			}
 			
 			if (clazz.getName().endsWith("Items")) {
-				List<Items> itemsList = (List<Items>) beanList;
-				for (Items items : itemsList) {
-					itemsMapper.insert(items);
+//				List<Items> itemsList = (List<Items>) beanList;
+				for (T bean : beanList) {
+					Items items = (Items) bean;
+					String primaryKey = items.getItem();
+					if (itemsMapper.findByPrimaryKey(primaryKey) != null) { //如果数据库中已经有这个数据，就删掉，再插入
+						itemsMapper.deleteByPrimaryKey(primaryKey);
+					}
+					itemsMapper.insert(bean);
 				}
 			}
 		} catch (ClassNotFoundException e) {
@@ -68,14 +79,11 @@ public class CsvFileService {
 			throw new RuntimeException(e);
 		} catch (IllegalAccessException e) {
 			throw new RuntimeException(e);
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 
-	public List<Boolean> checkDuplication(){//这个方法用来分析文件里面的数据是否在数据库中有相同项目，如果有，则不插入，
-		
-		List<Boolean> checkList = new ArrayList<Boolean>();
-		return checkList;
-	}
 	
 	@SuppressWarnings("unchecked")
 	public <T> List<T> findAll(Class<T> clazz){ //适用于所有表格的查询所有数据的功能，返回beanList
@@ -139,6 +147,17 @@ public class CsvFileService {
 		}
 	}
 
+/*	public List<TableList> showTables(){
+		List<String> tables = userMapper.showTables();
+		List<TableList> tableList = new ArrayList<TableList>();
+		for (String tableName : tables) {
+			TableList table = new TableList();
+			table.setTableName(tableName);
+			tableList.add(table);
+		}
+		return tableList;
+	}*/
+	
 	public void downloadTable() {
 		
 	}
@@ -147,8 +166,17 @@ public class CsvFileService {
 		
 	}
 
-	public void deleteItemByPrimaryKey(String pk) {
-		
+	public <T> Integer deleteByPrimaryKey(Class<T> clazz, String primaryKey) {
+		if (clazz == User.class) {
+			Integer uid = Integer.parseInt(primaryKey);
+			return (userMapper.deleteByPrimaryKey(uid));
+		} else if (clazz == Account.class) {
+			return (accountMapper.deleteByPrimaryKey(primaryKey));
+		} else if (clazz == Items.class) {
+			return (itemsMapper.deleteByPrimaryKey(primaryKey));
+		} else {
+			return null;
+		}
 	}
 
 

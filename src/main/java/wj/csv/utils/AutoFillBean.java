@@ -19,13 +19,15 @@ import org.junit.Test;
 
 
 public class AutoFillBean {
-    public static <T> List<T> fillBean(InputStream file, String fileName, String pojoPath) {
+    public static <T> List<T> fillBean(InputStream file, String fileName) {
         
     	List<T> beanList = null;
     	T bean = null;
-    	try {
-    		//调用getClassFromFileName方法，获取该文件对应要储存的类名
-    		Class<?> clazz = getClassFromFileName(fileName, pojoPath);
+		//调用getClassFromFileName方法，获取该文件对应要储存的类名
+		Class<?> clazz;
+		try {
+			clazz = getClassFromFileName(fileName);
+
             //获取指定的类中的所有属性
             Field[] fields = clazz.getDeclaredFields();
             //调用readFile方法，从文件中获取属性值的map
@@ -72,13 +74,27 @@ public class AutoFillBean {
               //在bean的所有属性赋值完毕后，将这个bean加到beanList里面去，然后进行下一个bean的属性赋值
                 beanList.add(bean);
             }
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (InstantiationException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (NoSuchMethodException e) {
+			e.printStackTrace();
+		} catch (SecurityException e) {
+			e.printStackTrace();
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
   /**
    * 
    * 关于异常的处理:什么时候该抛什么时候该处理，原本这里有6-7个异常，太长了。我嫌麻烦就直接用Exception代替了，正确的处理方式是什么？ 
    */
-    	} catch (Exception e) {
-    		throw new RuntimeException(e);
-		}
         return beanList;
     }
 
@@ -124,18 +140,13 @@ public class AutoFillBean {
     }
     
     //通过配置文件获取pojo类的路径
-	public static String getClassPath() {
-		Properties prop = new Properties();
-		try {
-			prop.load(ClassLoader.getSystemResourceAsStream("/projectInfo.properties"));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return prop.getProperty("classPath");
+	public static String getClassPath() throws IOException {
+		return PropertiesUtil.getPropery("classPath");
 	}
 	
-    public static Class<?> getClassFromFileName(String fileName, String pojoPath) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
+    public static Class<?> getClassFromFileName(String fileName) throws ClassNotFoundException, InstantiationException, IllegalAccessException, IOException {
     	//文件名的格式指定为：类名_xxxx.csv
+    	String pojoPath = getClassPath();
     	String className = pojoPath + fileName.substring(0, fileName.indexOf("_"));
 		Class<?> clazz = Class.forName(className);
 		return clazz;	//该方法可以通过文件名和指定的pojo路径返回一个该文件名指定的class类

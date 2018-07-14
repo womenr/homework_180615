@@ -1,18 +1,19 @@
 package wj.csv.mapper;
 
 import java.util.List;
+
 import org.apache.ibatis.annotations.Param;
 import wj.csv.pojo.Account;
 import wj.csv.pojo.AccountExample;
 
-public interface AccountMapper {
+public interface AccountMapper extends BaseMapper {
     long countByExample(AccountExample example);
 
     int deleteByExample(AccountExample example);
 
-    Account findByPrimaryKey(String account);
+   // Account findByPrimaryKey(String account);
     
-    int insert(Account record);
+   // int insert(Account record);
 
     int insertSelective(Account record);
 
@@ -22,5 +23,5 @@ public interface AccountMapper {
 
     int updateByExample(@Param("record") Account record, @Param("example") AccountExample example);
     
-    void deleteByPrimaryKey(String pk);
+  //  void deleteByPrimaryKey(String pk);
 }

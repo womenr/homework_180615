@@ -1,19 +1,19 @@
 package wj.csv.mapper;
 
 import java.util.List;
+
 import org.apache.ibatis.annotations.Param;
 import wj.csv.pojo.Items;
 import wj.csv.pojo.ItemsExample;
-import wj.csv.pojo.User;
 
-public interface ItemsMapper {
+public interface ItemsMapper extends BaseMapper {
     long countByExample(ItemsExample example);
 
     int deleteByExample(ItemsExample example);
     
-    Items findByPrimaryKey(String item);
+   // Items findByPrimaryKey(String item);
 
-    int insert(Items record);
+  //  int insert(Items record);
 
     int insertSelective(Items record);
 
@@ -23,5 +23,5 @@ public interface ItemsMapper {
 
     int updateByExample(@Param("record") Items record, @Param("example") ItemsExample example);
     
-    void deleteByPrimaryKey(String pk);
+   // void deleteByPrimaryKey(String pk);
 }

@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,6 +21,7 @@ import wj.base.controller.BaseController;
 import wj.csv.pojo.Account;
 import wj.csv.pojo.Items;
 import wj.csv.pojo.Msg;
+import wj.csv.pojo.TableList;
 import wj.csv.pojo.User;
 import wj.csv.service.CsvFileService;
 
@@ -31,25 +33,21 @@ public class CsvFileController extends BaseController{
 	private CsvFileService csvFileService;
 	
 	@RequestMapping("/editItem")
-	@ResponseBody
 	public String eidtItem(String pk){
 	        return null;
 	}
 	
 	@RequestMapping("/deleteItem")
-	@ResponseBody
 	public String deleteItem(String pk){
 	        return null;
 	}
 	
 	@RequestMapping("/downloadTable")
-	@ResponseBody
 	public String downloadTable(String tableName){
 		return null;
 	}
 	
 	@RequestMapping("/deleteTable")
-	@ResponseBody
 	public String deleteTable(String tableName, Model model){
 	    System.out.println(tableName);
 	    if(tableName != null) {
@@ -62,19 +60,20 @@ public class CsvFileController extends BaseController{
 	}
 	
 	@RequestMapping("/home")
-	public String home(Model model) {
+	public String home(HttpSession session) {
 		List<User> userList = csvFileService.findAll(User.class);
 		List<Items> itemsList = csvFileService.findAll(Items.class);
 		List<Account> accountList = csvFileService.findAll(Account.class);
-		model.addAttribute("userList", userList);
-		model.addAttribute("itemsList", itemsList);
-		model.addAttribute("accountList", accountList);
+		session.setAttribute("userList", userList);
+		session.setAttribute("itemsList", itemsList);
+		session.setAttribute("accountList", accountList);
+		/*List<TableList> tableList = csvFileService.showTables();
+		model.addAttribute("tableList", tableList);*/
 		return "files/upload";
 	}
 	
-	@ResponseBody
 	@RequestMapping(value="/upload",method=RequestMethod.POST) 
-    public String upload(@RequestParam(value = "file", required = false) MultipartFile file, HttpServletRequest request, HttpServletResponse response, Model model) {
+    public String upload(@RequestParam(value = "file", required = false) MultipartFile file, Model model) {
 
 		if(file.isEmpty()) {
         	model.addAttribute("fileMsg", "上传文件内容为空");
@@ -84,8 +83,14 @@ public class CsvFileController extends BaseController{
 		String fileName = file.getOriginalFilename();
 		if (!(fileName.endsWith(".csv"))) {
 			model.addAttribute("fileMsg", "所上传的文件必须是csv文件");
-        	return "files/upload"; 
+        	return "files/upload";
 		}
+		
+		if (file.getSize() > 20971420) {
+			model.addAttribute("fileMsg", "所上传的文件大小超过了20M");
+        	return "files/upload";
+		}
+		
 		//将上传上来的文件直接转化成流
 		InputStream fileInput;
 		try {
@@ -100,8 +105,7 @@ public class CsvFileController extends BaseController{
         	return "files/upload"; 
 		}
 		//如果上述步骤都通过了，那就说明文件上传成功，并且数据也保存到了数据库，则跳转到成功页面。
-		model.addAttribute("fileMsg", "文件名不符合规定");
-    	return "files/upload";
+    	return "files/success";
 
 	}
 }

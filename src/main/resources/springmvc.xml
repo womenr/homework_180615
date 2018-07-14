@@ -24,7 +24,7 @@
     <mvc:annotation-driven></mvc:annotation-driven>  
 
 	<!-- 将springmvc不能处理的请求交给tomcat来处理 -->
-	<!-- <mvc:default-servlet-handler/> -->
+	<mvc:default-servlet-handler/>
 	<!-- 静态资源放行规则 -->
 	<mvc:resources location="/static/**" mapping="/static/**" />
 
